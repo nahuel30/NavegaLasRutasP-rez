@@ -11,14 +11,15 @@ function ItemListContainer(props){
 
 
     useEffect(()=>{
-        getProducts()
+        setLoading(true)
+        getProducts(categoryId)
         .then((productsFromPromise)=> {
             setProducts(productsFromPromise)
             setLoading(false)
         })
 
         .catch((error)=>console.log(error))
-    }, [])
+    }, [categoryId])
 
     if(loading) return <div><h4>Cargando...</h4></div>
     
@@ -29,4 +30,4 @@ return (
 )
 }
 
-export default ItemListContainer    
+export default ItemListContainer
