@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
-import { getProducts } from "../utils/getProducts"
 import ItemList from "./ItemList"
 import { useParams } from "react-router-dom"
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore"
+import "../index.css"
 
 function ItemListContainer(props){
 
@@ -12,22 +13,33 @@ function ItemListContainer(props){
 
     useEffect(()=>{
         setLoading(true)
-        getProducts(categoryId)
-        .then((productsFromPromise)=> {
-            setProducts(productsFromPromise)
+        const db = getFirestore()
+        const collectionRef = collection(db, 'products')
+        const queryCollection = categoryId ? query(collectionRef, where("category", "==", categoryId)) : collectionRef
+
+        getDocs(queryCollection).then((response)=>{
+            const responseMapped = response.docs.map((doc)=>({...doc.data() , id: doc.id}))
+            setProducts(responseMapped)
+        }).catch(()=>{
+        console.log('error de carga de producto')
+       })
+        .finally(()=>{
             setLoading(false)
         })
 
-        .catch((error)=>console.log(error))
     }, [categoryId])
 
     if(loading) return <div><h4>Cargando...</h4></div>
     
 return (
-    <div>
-        <ItemList products={products}></ItemList>
-    </div>
+  <div className="container">
+    {loading 
+      ? <h4>Cargando...</h4> 
+      : <ItemList products={products} />
+    }
+  </div>
 )
+
 }
 
 export default ItemListContainer

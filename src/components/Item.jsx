@@ -1,14 +1,15 @@
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom"
+import "../index.css"
 
-const Item = (props)=>{
+const Item = ({ product }) => {
     return (
-    <div style={{ border: '2px solid black', borderRadius: '8px', padding: '20px', minWidth: 200}}>
-        <h2>{props.product.title}</h2>
-        <img width={150} src={props.product.img}></img>
-        <h3>${props.product.price}</h3>
-        <Link to={`/item/${props.product.id}`}>Ver detalle!</Link>
-    </div>
-    )
-}
+        <div className="item-card">
+            <img src={product.img} alt={product.title} className="item-image" />
+            <h2 className="item-title">{product.title}</h2>
+            <h3 className="item-price">${product.price}</h3>
+            <Link to={`/item/${product.id}`} className="item-link">Ver detalle</Link>
+        </div>
+    );
+};
 
-export default Item
+export default Item;

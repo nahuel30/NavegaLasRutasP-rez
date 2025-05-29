@@ -1,12 +1,14 @@
 import Item from './Item'
+import "../index.css"
 
 const ItemList = (props) => {
-    return (
-    <div style={{display: 'flex', flexWrap: 'wrap', gap: '20px', backgroundColor: 'skyblue'}}>
-        {props.products.map((product)=> (
-        <Item product={product} key={product.id}></Item>
-        ))}
-    </div>)
+  return (
+    <div className="item-grid">
+      {props.products.map(product => (
+        <Item key={product.id} product={product} />
+      ))}
+    </div>
+  )
 }
 
 export default ItemList

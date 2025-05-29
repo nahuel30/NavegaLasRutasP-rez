@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { getSingleProduct } from "../utils/getProducts"
 import ItemDetail from "./ItemDetail"
+import { doc, getDoc, getFirestore } from "firebase/firestore"
+import "../index.css"
 
 const ItemDetailContainer = ()=>{
 
@@ -11,20 +13,28 @@ const ItemDetailContainer = ()=>{
 
 
     useEffect(()=>{
-       getSingleProduct(productId).then((productFromPromise)=>{
-        setProduct(productFromPromise)
+       const db = getFirestore()
+       const documentRef = doc(db, 'products', productId)
+
+       getDoc(documentRef).then((response)=>{
+        setProduct({...response.data(), id: response.id})
         setLoading(false)
-       })  
+       })
+       .catch(()=>{
+        console.log('error de carga de producto')
+       })
+
     }, [productId])
 
     if(loading) return <div><h4>Cargando...</h4></div>
 
 
     return (
-    <div>
-        <ItemDetail product={product}></ItemDetail>
+    <div className="container item-detail-container">
+        <ItemDetail product={product} />
     </div>
     )
+
 }
 
 export default ItemDetailContainer
